@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/auth-layout :: layout('Entrar', ~{::section})}">
+<body>
+<section>
+    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+        Usuário ou senha inválidos.
+    </div>
+    <div th:if="${param.logout}" class="alert alert-success" role="alert">
+        Você saiu do sistema.
+    </div>
+    <div th:if="${param.expired}" class="alert alert-warning" role="alert">
+        Sua sessão foi encerrada porque a senha foi alterada. Entre novamente.
+    </div>
+
+    <form th:action="@{/login}" method="post" novalidate>
+        <div class="mb-3">
+            <label for="username" class="form-label">Usuário</label>
+            <input type="text" id="username" name="username" class="form-control"
+                   autocomplete="username" autofocus required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Senha</label>
+            <div class="input-group">
+                <input type="password" id="password" name="password" class="form-control"
+                       autocomplete="current-password" required>
+                <button th:replace="~{fragments/form :: passwordToggle}"></button>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Entrar</button>
+    </form>
+
+    <div class="d-flex justify-content-between mt-3">
+        <a th:href="@{/forgot-password}" class="small">Esqueci minha senha</a>
+        <a th:href="@{/register}" class="small">Criar conta</a>
+    </div>
+</section>
+</body>
+</html>

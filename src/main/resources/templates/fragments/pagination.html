@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<nav th:fragment="pagination(page, url)" th:if="${page.totalPages > 1}" aria-label="Paginação"
+     th:with="first=${page.number > 2 ? page.number - 2 : 0},
+              last=${page.number + 2 < page.totalPages - 1 ? page.number + 2 : page.totalPages - 1}">
+    <ul class="pagination justify-content-center mb-0">
+        <li class="page-item" th:classappend="${page.first} ? 'disabled'">
+            <a class="page-link" th:href="@{${url}(page=${page.number - 1})}">Anterior</a>
+        </li>
+        <li class="page-item" th:each="index : ${#numbers.sequence(first, last)}"
+            th:classappend="${index == page.number} ? 'active'">
+            <a class="page-link" th:href="@{${url}(page=${index})}" th:text="${index + 1}">1</a>
+        </li>
+        <li class="page-item" th:classappend="${page.last} ? 'disabled'">
+            <a class="page-link" th:href="@{${url}(page=${page.number + 1})}">Próxima</a>
+        </li>
+    </ul>
+</nav>
+
+</body>
+</html>

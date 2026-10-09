@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(${itemId == null ? 'Novo item' : 'Editar item'}, ~{::section})}">
+<body>
+<section class="row justify-content-center">
+    <div class="col-12 col-xl-9">
+        <h1 class="h3 mb-3" th:text="${itemId == null ? 'Novo item' : 'Editar item'}">Item</h1>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form th:action="${itemId == null} ? @{/items} : @{/items/{id}(id=${itemId})}"
+                      th:object="${form}" method="post" novalidate>
+                    <input type="hidden" th:field="*{version}">
+                    <div th:replace="~{fragments/form :: globalErrors}"></div>
+
+                    <div class="row gx-3">
+                        <div class="col-md-4">
+                            <div th:replace="~{fragments/form :: textField('code', 'Código', 'text', 'off')}"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <div th:replace="~{fragments/form :: textField('name', 'Nome', 'text', 'off')}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div th:replace="~{fragments/form :: selectField('category', 'Categoria', ${categories}, 'Selecione a categoria')}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div th:replace="~{fragments/form :: textField('brand', 'Marca', 'text', 'off')}"></div>
+                        </div>
+                        <div class="col-12">
+                            <div th:replace="~{fragments/form :: textField('application', 'Aplicação (veículos compatíveis)', 'text', 'off')}"></div>
+                        </div>
+                        <div class="col-12">
+                            <div th:replace="~{fragments/form :: textAreaField('description', 'Descrição', 3)}"></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div th:replace="~{fragments/form :: numberField('quantity', ${itemId == null ? 'Quantidade inicial' : 'Quantidade em estoque'}, 1)}"></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div th:replace="~{fragments/form :: numberField('minimumQuantity', 'Estoque mínimo', 1)}"></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div th:replace="~{fragments/form :: numberField('price', 'Preço (R$)', 0.01)}"></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div th:replace="~{fragments/form :: textField('location', 'Localização', 'text', 'off')}"></div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                        <a th:href="${itemId == null} ? @{/items} : @{/items/{id}(id=${itemId})}"
+                           class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

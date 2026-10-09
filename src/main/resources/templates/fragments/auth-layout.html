@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, content)">
+<head th:replace="~{fragments/head :: head(${title})}"></head>
+<body class="bg-body-tertiary d-flex flex-column min-vh-100">
+
+<main class="container flex-grow-1 d-flex align-items-center justify-content-center py-5">
+    <div class="card shadow-sm auth-card">
+        <div class="card-body p-4">
+            <h1 class="h4 text-center mb-4">Estoque de Peças</h1>
+            <th:block th:replace="~{fragments/alerts :: alerts}"></th:block>
+            <th:block th:replace="${content}"></th:block>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/password-toggle.js}"></script>
+</body>
+</html>

@@ -1,10 +1,9 @@
 package com.example.LoginCompleto;
 
+import com.example.LoginCompleto.support.AbstractIntegrationTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class LoginCompletoApplicationTests {
+class LoginCompletoApplicationTests extends AbstractIntegrationTest {
 
 	@Test
 	void contextLoads() {

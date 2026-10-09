@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<body>
+<footer th:fragment="footer" class="py-3 text-center text-body-secondary small border-top">
+    Estoque de Peças &copy; <span th:text="${#temporals.year(#temporals.createToday())}">2026</span>
+</footer>
+</body>
+</html>

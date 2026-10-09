@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/auth-layout :: layout('Criar conta', ~{::section})}">
+<body>
+<section>
+    <h2 class="h6 mb-3">Criar conta</h2>
+
+    <form th:action="@{/register}" th:object="${form}" method="post" novalidate>
+        <div th:replace="~{fragments/form :: globalErrors}"></div>
+        <div th:replace="~{fragments/form :: fieldError('passwordConfirmed')}"></div>
+
+        <div th:replace="~{fragments/form :: textField('name', 'Nome completo', 'text', 'name')}"></div>
+        <div th:replace="~{fragments/form :: textField('username', 'Usuário', 'text', 'username')}"></div>
+        <div th:replace="~{fragments/form :: textField('email', 'E-mail', 'email', 'email')}"></div>
+        <div th:replace="~{fragments/form :: selectField('role', 'Perfil', ${roles}, 'Selecione o perfil')}"></div>
+        <div th:replace="~{fragments/form :: textField('password', 'Senha', 'password', 'new-password')}"></div>
+        <div th:replace="~{fragments/form :: textField('confirmPassword', 'Confirme a senha', 'password', 'new-password')}"></div>
+        <p class="text-body-secondary small">A senha deve ter entre 8 e 64 caracteres, com letras e números.</p>
+
+        <button type="submit" class="btn btn-primary w-100">Criar conta</button>
+    </form>
+
+    <div class="text-center mt-3">
+        <a th:href="@{/login}" class="small">Já tenho conta</a>
+    </div>
+</section>
+</body>
+</html>

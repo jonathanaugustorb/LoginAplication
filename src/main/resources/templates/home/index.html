@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{fragments/layout :: layout('Início', ~{::section})}">
+<body>
+<section>
+    <div class="mb-4">
+        <h1 class="h3 mb-1">Olá, <span sec:authentication="principal.name">Usuário</span></h1>
+        <p class="text-body-secondary mb-0">
+            Perfil: <span sec:authentication="principal.role.role">Perfil</span>
+        </p>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-6 col-lg-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <p class="text-body-secondary small mb-1">Itens cadastrados</p>
+                    <p class="h3 mb-0" th:text="${totalItems}">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <a th:href="@{/items(lowStock=true)}" class="card shadow-sm text-decoration-none"
+               th:classappend="${lowStockItems > 0} ? 'border-danger'">
+                <div class="card-body">
+                    <p class="text-body-secondary small mb-1">Com estoque baixo</p>
+                    <p class="h3 mb-0" th:classappend="${lowStockItems > 0} ? 'text-danger'"
+                       th:text="${lowStockItems}">0</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 card-title">Itens</h2>
+                    <p class="card-text text-body-secondary">Consulte as peças e o estoque disponível.</p>
+                    <a th:href="@{/items}" class="btn btn-primary">Ver itens</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4" sec:authorize="hasRole('ESTOQUE')">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 card-title">Novo item</h2>
+                    <p class="card-text text-body-secondary">Cadastre uma nova peça no estoque.</p>
+                    <a th:href="@{/items/new}" class="btn btn-outline-primary">Cadastrar item</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{fragments/layout :: layout('Itens', ~{::section})}">
+<body>
+<section>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <h1 class="h3 mb-0">Itens</h1>
+        <a th:href="@{/items/new}" class="btn btn-primary" sec:authorize="hasRole('ESTOQUE')">Novo item</a>
+    </div>
+
+    <form th:action="@{/items}" th:object="${filter}" method="get" class="card card-body shadow-sm mb-3">
+        <div class="row g-2 align-items-end">
+            <div class="col-12 col-lg-4">
+                <label for="search" class="form-label small">Buscar</label>
+                <input type="search" class="form-control" th:field="*{search}"
+                       placeholder="Nome, código, marca ou aplicação">
+            </div>
+            <div class="col-6 col-lg-2">
+                <label for="category" class="form-label small">Categoria</label>
+                <select class="form-select" th:field="*{category}">
+                    <option value="">Todas</option>
+                    <option th:each="option : ${categories}" th:value="${option.name()}"
+                            th:text="${option.label}">Categoria</option>
+                </select>
+            </div>
+            <div class="col-6 col-lg-2">
+                <label for="sort" class="form-label small">Ordenar por</label>
+                <select id="sort" name="sort" class="form-select">
+                    <option value="name,asc" th:selected="${currentSort == 'name,asc'}">Nome</option>
+                    <option value="code,asc" th:selected="${currentSort == 'code,asc'}">Código</option>
+                    <option value="quantity,asc" th:selected="${currentSort == 'quantity,asc'}">Menor estoque</option>
+                    <option value="price,asc" th:selected="${currentSort == 'price,asc'}">Menor preço</option>
+                    <option value="price,desc" th:selected="${currentSort == 'price,desc'}">Maior preço</option>
+                </select>
+            </div>
+            <div class="col-12 col-lg-2">
+                <div class="form-check mb-2">
+                    <input type="checkbox" class="form-check-input" th:field="*{lowStock}">
+                    <label class="form-check-label" th:for="${#ids.prev('lowStock')}">Estoque baixo</label>
+                </div>
+            </div>
+            <div class="col-12 col-lg-2 d-flex gap-2">
+                <button type="submit" class="btn btn-outline-primary flex-fill">Filtrar</button>
+                <a th:href="@{/items}" class="btn btn-outline-secondary flex-fill">Limpar</a>
+            </div>
+        </div>
+    </form>
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th scope="col">Código</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Categoria</th>
+                    <th scope="col">Marca</th>
+                    <th scope="col" class="text-end">Estoque</th>
+                    <th scope="col" class="text-end">Preço</th>
+                    <th scope="col">Local</th>
+                    <th scope="col" class="text-end">Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${page.content}">
+                    <td class="font-monospace" th:text="${item.code}">CODIGO</td>
+                    <td th:text="${item.name}">Nome</td>
+                    <td th:text="${item.category.label}">Categoria</td>
+                    <td th:text="${item.brand} ?: '—'">Marca</td>
+                    <td class="text-end text-nowrap">
+                        <span th:text="${item.quantity}">0</span>
+                        <span class="badge text-bg-danger ms-1" th:if="${item.lowStock}"
+                              th:title="'Mínimo: ' + ${item.minimumQuantity}">Baixo</span>
+                    </td>
+                    <td class="text-end text-nowrap" th:text="${#numbers.formatCurrency(item.price)}">R$ 0,00</td>
+                    <td th:text="${item.location} ?: '—'">Local</td>
+                    <td class="text-end text-nowrap">
+                        <a th:href="@{/items/{id}(id=${item.id})}" class="btn btn-sm btn-outline-primary">Ver</a>
+                        <a th:href="@{/items/{id}/edit(id=${item.id})}" class="btn btn-sm btn-outline-secondary"
+                           sec:authorize="hasRole('SUPERVISOR')">Editar</a>
+                    </td>
+                </tr>
+                <tr th:if="${page.empty}">
+                    <td colspan="8" class="text-center text-body-secondary py-4">Nenhum item encontrado.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3">
+        <span class="text-body-secondary small" th:text="${page.totalElements} + ' item(ns) encontrado(s)'">0 itens</span>
+        <nav th:replace="~{fragments/pagination :: pagination(${page}, ${pageUrl})}"></nav>
+    </div>
+</section>
+</body>
+</html>

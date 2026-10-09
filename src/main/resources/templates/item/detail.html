@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{fragments/layout :: layout(${item.name}, ~{::section})}">
+<body>
+<section>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/items}">Itens</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="${item.code}">CODIGO</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+        <div>
+            <h1 class="h3 mb-1" th:text="${item.name}">Nome</h1>
+            <span class="badge text-bg-secondary" th:text="${item.category.label}">Categoria</span>
+            <span class="badge text-bg-danger" th:if="${item.lowStock}">Estoque baixo</span>
+        </div>
+        <div class="d-flex gap-2">
+            <a th:href="@{/items/{id}/edit(id=${item.id})}" class="btn btn-outline-primary"
+               sec:authorize="hasRole('SUPERVISOR')">Editar</a>
+            <form th:action="@{/items/{id}/delete(id=${item.id})}" method="post" sec:authorize="hasRole('GERENTE')"
+                  onsubmit="return confirm('Excluir este item? Esta ação não pode ser desfeita.');">
+                <button type="submit" class="btn btn-outline-danger">Excluir</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-12 col-lg-8">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Código</dt>
+                        <dd class="col-sm-8 font-monospace" th:text="${item.code}">CODIGO</dd>
+                        <dt class="col-sm-4">Marca</dt>
+                        <dd class="col-sm-8" th:text="${item.brand} ?: '—'">Marca</dd>
+                        <dt class="col-sm-4">Aplicação</dt>
+                        <dd class="col-sm-8" th:text="${item.application} ?: '—'">Aplicação</dd>
+                        <dt class="col-sm-4">Descrição</dt>
+                        <dd class="col-sm-8 text-break" th:text="${item.description} ?: '—'">Descrição</dd>
+                        <dt class="col-sm-4">Preço</dt>
+                        <dd class="col-sm-8" th:text="${#numbers.formatCurrency(item.price)}">R$ 0,00</dd>
+                        <dt class="col-sm-4">Localização</dt>
+                        <dd class="col-sm-8" th:text="${item.location} ?: '—'">Local</dd>
+                        <dt class="col-sm-4">Cadastrado</dt>
+                        <dd class="col-sm-8"
+                            th:text="${@display.dateTime(item.createdAt)} + ' por ' + (${item.createdBy} ?: '—')">
+                            Data</dd>
+                        <dt class="col-sm-4">Última alteração</dt>
+                        <dd class="col-sm-8 mb-0"
+                            th:text="${@display.dateTime(item.updatedAt)} + ' por ' + (${item.updatedBy} ?: '—')">
+                            Data</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h2 class="h6 text-body-secondary">Estoque</h2>
+                    <p class="display-6 mb-0" th:text="${item.quantity}">0</p>
+                    <p class="small text-body-secondary" th:text="'Mínimo: ' + ${item.minimumQuantity}">Mínimo</p>
+
+                    <form th:action="@{/items/{id}/stock(id=${item.id})}" th:object="${stockEntry}" method="post"
+                          sec:authorize="hasRole('ESTOQUE')" novalidate>
+                        <label for="quantity" class="form-label">Entrada de estoque</label>
+                        <div class="input-group">
+                            <input type="number" min="1" step="1" class="form-control" th:field="*{quantity}"
+                                   placeholder="Quantidade" required>
+                            <button type="submit" class="btn btn-success">Adicionar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

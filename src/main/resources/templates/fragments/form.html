@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="textField(field, label, type, autocomplete)" class="mb-3">
+    <label class="form-label" th:for="${field}" th:text="${label}">Campo</label>
+    <div th:class="${type == 'password'} ? 'input-group has-validation'">
+        <input class="form-control" th:type="${type}" th:field="*{__${field}__}"
+               th:attr="autocomplete=${autocomplete}" th:errorclass="is-invalid">
+        <th:block th:if="${type == 'password'}">
+            <button th:replace="~{fragments/form :: passwordToggle}"></button>
+        </th:block>
+        <div class="invalid-feedback" th:if="${#fields.hasErrors(field)}" th:errors="*{__${field}__}">Erro</div>
+    </div>
+</div>
+
+<button th:fragment="passwordToggle" type="button" class="btn btn-outline-secondary" data-password-toggle
+        aria-label="Mostrar senha" aria-pressed="false" title="Mostrar senha">
+    <svg data-icon="show" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         aria-hidden="true">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+        <circle cx="12" cy="12" r="3"/>
+    </svg>
+    <svg data-icon="hide" class="d-none" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+         stroke-linejoin="round" aria-hidden="true">
+        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+        <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
+        <line x1="1" y1="1" x2="23" y2="23"/>
+    </svg>
+</button>
+
+<div th:fragment="numberField(field, label, step)" class="mb-3">
+    <label class="form-label" th:for="${field}" th:text="${label}">Campo</label>
+    <input class="form-control" type="number" min="0" th:step="${step}" th:field="*{__${field}__}"
+           th:errorclass="is-invalid">
+    <div class="invalid-feedback" th:if="${#fields.hasErrors(field)}" th:errors="*{__${field}__}">Erro</div>
+</div>
+
+<div th:fragment="textAreaField(field, label, rows)" class="mb-3">
+    <label class="form-label" th:for="${field}" th:text="${label}">Campo</label>
+    <textarea class="form-control" th:rows="${rows}" th:field="*{__${field}__}" th:errorclass="is-invalid"></textarea>
+    <div class="invalid-feedback" th:if="${#fields.hasErrors(field)}" th:errors="*{__${field}__}">Erro</div>
+</div>
+
+<div th:fragment="selectField(field, label, options, placeholder)" class="mb-3">
+    <label class="form-label" th:for="${field}" th:text="${label}">Campo</label>
+    <select class="form-select" th:field="*{__${field}__}" th:errorclass="is-invalid">
+        <option value="" th:text="${placeholder}">Selecione</option>
+        <option th:each="option : ${options}" th:value="${option.name()}" th:text="${option.label}">Opção</option>
+    </select>
+    <div class="invalid-feedback" th:if="${#fields.hasErrors(field)}" th:errors="*{__${field}__}">Erro</div>
+</div>
+
+<div th:fragment="fieldError(field)" th:if="${#fields.hasErrors(field)}"
+     class="alert alert-danger py-2 small" role="alert" th:errors="*{__${field}__}">Erro</div>
+
+<div th:fragment="globalErrors" th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger" role="alert">
+    <p class="mb-0" th:each="error : ${#fields.globalErrors()}" th:text="${error}">Erro</p>
+</div>
+
+</body>
+</html>
